@@ -3,51 +3,50 @@
 {% block title %}Home | Content Creator Platform{% endblock %}
 
 {% block content %}
+
     <h1 class="centered">Welcome to the website!</h1>
     <h2 class="centered">Discover new bloggers or streamers</h2>
     <h3 class="centered">Connect with them, collaborate or just look at their content. Maybe you will find your new favorite creator here :3</h3>
     <h3 class="centered">Here is what we have in stock👇</h3>
-    <h4 class>Search result:</h4>
 
-    <div class="input-group mb-3" style="max-width: 500px; margin: auto;">
-        <input type="text" class="form-control" style="background-color: #5990c0;" placeholder="Search" aria-label="Search" aria-describedby="button-addon2">
-        <button class="btn" type="button" id="button-addon2" style="background: linear-gradient(90deg, #5990c0, #102a6b); color: #ececec; border: none;">
-            Search
-        </button>
+    <div class="vertical-center">
+        <a href="{{ url_for('search') }}" class="btn btn-primary btn-lg" role="button" style="margin-bottom: 20px; border-radius: 98px; background-color: #102a6b; justify-content: center;">
+        Discover more creators
+        </a>
     </div>
 
     <div class="row row-cols-1 row-cols-md-4 g-4">
   <div class="col">
-    <div class="card h-100">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
+    <div class="card h-100" style="border: none;">
+      <img src="{{ url_for('static', filename='images/2b433b1b160fd01094ce0cd2dc02e2d5.jpg') }}" class="card-img-top" alt="avatar1">
+      <div class="card-body" style="background-color: rgba(1, 81, 132) !important; border: none; color: #ECECEC;">
         <h5 class="card-title">Content Creator 1</h5>
         <p class="card-text">This is a card with information about a specific content creator. This can include: bio, their type, social media links.</p>
       </div>
     </div>
   </div>
   <div class="col">
-    <div class="card h-100">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
+    <div class="card h-100" style="border: none;">
+      <img src="{{ url_for('static', filename='images/53be8298333bca79652ea9bb47406fd9.jpg') }}" class="card-img-top" alt="avatar2">
+      <div class="card-body" style="background-color: rgba(138, 40, 50) !important; border: none; color: #ECECEC;">
         <h5 class="card-title">Content creator 2</h5>
         <p class="card-text">This is a card with information about a specific content creator. This can include: bio, their type, social media links.</p>
       </div>
     </div>
   </div>
   <div class="col">
-    <div class="card h-100">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
+    <div class="card h-100" style="border: none;">
+      <img src="{{ url_for('static', filename='images/chisa⋆_𐙚 ̊.jpg') }}" class="card-img-top" alt="avatar3">
+      <div class="card-body" style="background-color: rgba(229, 169, 191) !important; border: none; color: #241a22;">
         <h5 class="card-title">Content creator 3</h5>
         <p class="card-text">This is a card with information about a specific content creator. This can include: bio, their type, social media links.</p>
       </div>
     </div>
   </div>
   <div class="col">
-    <div class="card h-100">
-      <img src="..." class="card-img-top" alt="...">
-      <div class="card-body">
+    <div class="card h-100" style="border: none;">
+      <img src="{{ url_for('static', filename='images/when-someone-says-im-cute.jpg') }}" class="card-img-top" alt="avatar4">
+      <div class="card-body" style="background-color: rgba(42, 46, 112) !important; border: none; color: #ECECEC;">
         <h5 class="card-title">Content creator 4</h5>
         <p class="card-text">This is a card with information about a specific content creator. This can include: bio, their type, social media links.</p>
       </div>

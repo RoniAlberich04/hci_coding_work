@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Content creator site{% endblock %}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href='https://fonts.googleapis.com/css?family=Lobster Two' rel='stylesheet'>
     <style>
@@ -42,13 +42,19 @@
         opacity: 1; 
       }
 
+      .vertical-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100px;
+      }
+
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark">
   <div class="container">
-    <a class="navbar-brand fs-4 fw-bold" href="{{ url_for('index') }}">Content Creator site
-    </a>
+    <a class="navbar-brand fs-4 fw-bold" href="{{ url_for('index') }}">Content Creator site</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -70,7 +76,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('index') }}">Log In
+          <a class="nav-link" href="{{ url_for('login') }}">Log In
           </a>
         </li>
       </ul>
@@ -95,6 +101,18 @@
         <div class="container">
             <p class="mb-0">&copy; 2025 Content Creator Platform. All rights reserved.</p>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Bootstrap загружен');
+            var toggler = document.querySelector('.navbar-toggler');
+            if (toggler) {
+                console.log('Кнопка гамбургера найдена');
+                toggler.addEventListener('click', function() {
+                    console.log('Кнопка гамбургера нажата');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
