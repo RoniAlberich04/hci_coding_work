@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, session, url_for 
+from flask import Flask, render_template, request, flash, session, url_for, redirect 
 import sqlite3
 import hashlib
 
@@ -20,9 +20,10 @@ def init_db():
         CREATE TABLE IF NOT EXISTS users (
             user_id       INTEGER PRIMARY KEY AUTOINCREMENT,
             username      VARCHAR(50) UNIQUE NOT NULL,
-            display_name  VARCHAR(100),
+            display_name  VARCHAR(100) NOT NULL,
             email        VARCHAR(100) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
+            bio TEXT,
             created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     ''')
@@ -110,6 +111,10 @@ def index():
 def login():
     return render_template('login.html')
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    return render_template('search.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -117,7 +122,7 @@ def register():
         email = request.form['email']
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        full_name = request.form['full_name']
+        display_name = request.form['display_name']
         bio = request.form.get('bio', '')
 
         #Validation
@@ -131,7 +136,7 @@ def register():
         conn = get_db()
         cursor = conn.cursor()
         
-        user = cursor.execute('SELECT * FROM users WHERE username==? OR email==?', (username, email)).fetchone
+        user = cursor.execute('SELECT * FROM users WHERE username=? OR email=?', (username, email)).fetchone()
         if user:
             flash("Username or email already exists",'danger')
             conn.close()
@@ -139,19 +144,20 @@ def register():
         
         #OK, user created
         password_hash = hash_password(password)
-        cursor.execute('''INSERT INTO users (username, full_name, email, password_hash, bio) 
+        cursor.execute('''
+                       INSERT INTO users (username, display_name, email, password_hash, bio) 
                        VALUES (?, ?, ?, ?, ?)
-                       '''(username, full_name, email, password_hash, bio))
+                       ''', (username, display_name, email, password_hash, bio))
         
-        flash("Your account has been created, please log in",'success')
-        redirect(url_for('login'))
-
-
         conn.commit()
         conn.close()
 
-        return render_template('register.html')
+        flash("Your account has been created, please log in",'success')
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+    
 
 if __name__ == '__main__':
-init_db()
-app.run(debug=True)
+    init_db()
+    app.run(debug=True)
