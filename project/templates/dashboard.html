@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+
+{% block title %}Your Profile | Content Creator Platform{% endblock %}
+
+{% block content %}
+
+<style>
+    .banner-container {
+        height: 300px;
+        border-radius: 20px 20px 0 0;
+        overflow: hidden;
+        margin-bottom: -50px;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-color: #1A488E; /* Fallback color matching base background */
+    }
+    
+    /* If no banner image, show gradient background */
+    .banner-container.no-banner {
+        background: linear-gradient(135deg, #97B2DE 0%, #092147 100%);
+    }
+    
+    .profile-banner-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Make overlay lighter to show banner better */
+    .banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+    }
+    
+    /* Edit button should stand out more */
+    .banner-edit-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: none;
+        color: #1A488E;
+        font-weight: bold;
+        transition: all 0.3s;
+    }
+    
+    .banner-edit-btn:hover {
+        background-color: white;
+        transform: scale(1.05);
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, rgba(22, 37, 79, 0.9) 0%, rgba(74, 111, 165, 0.9) 100%);
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .profile-picture {
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        object-fit: cover;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        background-color: #97B2DE; /* Fallback color */
+    }
+    
+    .social-links a {
+        display: inline-block;
+        margin-right: 15px;
+        color: #ECECEC;
+        text-decoration: none;
+        font-size: 1.2rem;
+        transition: transform 0.2s, color 0.2s;
+    }
+    
+    .social-links a:hover {
+        color: #4dabf7;
+        transform: translateY(-2px);
+    }
+    
+    .profile-stats {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        padding: 15px;
+    }
+    
+    /* Ensure text is readable on banner */
+    .banner-text {
+        position: absolute;
+        bottom: 20px;
+        left: 30px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+
+<div class="banner-container {% if user.banner_url %}has-banner{% else %}no-banner{% endif %}" 
+     {% if user.banner_url %}style="background-image: url('{{ user.banner_url }}');"{% endif %}>
+    <div class="banner-overlay"></div>
+    
+    <!-- Banner content -->
+    <div class="banner-text">
+        <h2>{{ user.display_name }}</h2>
+        <p class="lead mb-0">@{{ user.username }}</p>
+    </div>
+    
+    <!-- Edit Banner Button -->
+    <button class="btn banner-edit-btn" data-bs-toggle="modal" data-bs-target="#changeBannerModal">
+        <i class="bi bi-image"></i> Change Banner
+    </button>
+</div>
+
+
+<div class="profile-header">
+    <div class="row align-items-center">
+        <div class="col-md-4 text-center">
+            
+            {% if user.profile_picture_url %}
+            <img src="{{ user.profile_picture_url }}" 
+                alt="Profile Picture" 
+                class="profile-picture mb-3">
+            {% else %}
+            <img src="{{ url_for('static', filename='images/3c67757cef723535a7484a6c7bfbfc43.jpeg') }}" 
+                alt="Profile Picture" 
+                class="profile-picture mb-3">
+            {% endif %}
+            
+            <div>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#changePictureModal">
+                    <i class="bi bi-camera"></i> Change Picture
+                </button>
+            </div>
+        </div>
+        
+        <div class="col-md-8">
+            <h1 class="display-5">{{ user.display_name }}</h1>
+            <p class="lead text-light">@{{ user.username }}</p>
+            
+            {% if user.bio %}
+            <div class="card mt-3" style="background-color: rgba(255, 255, 255, 0.1); border: none;">
+                <div class="card-body">
+                    <p class="card-text">{{ user.bio }}</p>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-light mt-3"><i>No bio yet</i></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+            <div class="card-body">
+                <h3 class="card-title"><i class="bi bi-link-45deg"></i>Social media</h3>
+                
+                <div class="social-links mb-3" id="socialLinks">
+                    {% if social_links %}
+                        {% for link in social_links %}
+                        <a href="{{ link.url }}" target="_blank" class="btn btn-outline-light mb-2 me-2">
+                            {% if link.platform == 'twitter' %}
+                                <i class="bi bi-twitter"></i> Twitter
+                            {% elif link.platform == 'youtube' %}
+                                <i class="bi bi-youtube"></i> YouTube
+                            {% elif link.platform == 'instagram' %}
+                                <i class="bi bi-instagram"></i> Instagram
+                            {% else %}
+                                <i class="bi bi-link-45deg"></i> {{ link.platform }}
+                            {% endif %}
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted"  style="color: #ECECEC;">No social links yet</p>
+                    {% endif %}
+                </div>
+                
+                
+                <form method="POST" action="{{ url_for('add_social_link') }}">
+                    <div class="input-group mb-3">
+                        <select class="form-select" name="platform" style="max-width: 150px;" required style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+                            <option value="">Platform</option>
+                            <option value="twitter">Twitter</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="other">Other</option>  
+                        </select>
+                        <input type="url" class="form-control" name="url" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC;"
+                               placeholder="https://..." required>
+                        <button class="btn btn-success" type="submit" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC;">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div class="col-md-6">
+        <div class="card mb-4" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+            <div class="card-body">
+                <h3 class="card-title">Profile page</h3>
+                
+                <table class="table table-borderless text-light" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+                    <tr>
+                        <td><strong>Username:</strong></td>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>First appearence:</strong></td>
+                        <td>{{ user.created_at[:10] if user.created_at else "Recently" }}</td>
+                    </tr>
+                </table>
+                
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+                    <i class="bi bi-pencil"></i> Edit profile
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add banner change modal if not present -->
+<div class="modal fade" id="changeBannerModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: rgba(22, 37, 79, 0.95); color: #ECECEC;">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Banner</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Enter a URL for your banner image.</p>
+                
+                <form method="POST" action="{{ url_for('update_banner') }}">
+                    <div class="mb-3">
+                        <label for="bannerUrl" class="form-label">Banner Image URL:</label>
+                        <input type="url" class="form-control" id="bannerUrl" 
+                               name="banner_url" 
+                               placeholder="https://example.com/banner.jpg"
+                               value="{{ user.banner_url or '' }}">
+                        <div class="form-text">
+                            Recommended size: 1200x300px or larger
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Save Banner</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для изменения фото -->
+<div class="modal fade" id="changePictureModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: rgba(22, 37, 79, 0.95); color: #ECECEC;">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit profile photo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">Simply insert a link to your photo on the internet.</p>
+                
+                <form method="POST" action="{{ url_for('update_profile_picture') }}">
+                    <div class="mb-3">
+                        <label for="pictureUrl" class="form-label">URL of the photo:</label>
+                        <input type="url" class="form-control" id="pictureUrl" 
+                               name="profile_picture_url" 
+                               placeholder="https://example.com/my-photo.jpg"
+                               value="{{ user.profile_picture_url or '' }}"
+                               required>
+                        <div class="form-text">
+                            Links to JPG, PNG, and GIF images are supported.
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <small>
+                            <i class="bi bi-info-circle"></i> 
+                            You can upload photos to any image hosting service 
+                            (Imgur, Google Фото и т.д.) и and paste the link here.
+                        </small>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Save photo</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для редактирования профиля -->
+<div class="modal fade" id="editProfileModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: rgba(22, 37, 79, 0.95); color: #ECECEC;">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit profile</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('update_profile') }}">
+                    <div class="mb-3">
+                        <label for="editDisplayName" class="form-label">Displaying image</label>
+                        <input type="text" class="form-control" id="editDisplayName" 
+                               name="display_name" value="{{ user.display_name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editBio" class="form-label">Bio</label>
+                        <textarea class="form-control" id="editBio" name="bio" rows="4">{{ user.bio or '' }}</textarea>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

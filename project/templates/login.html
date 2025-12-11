@@ -4,4 +4,40 @@
 
 {% block content %}
     <h1 class="centered">Welcome back!! Please log in to access Your account</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow" style="border-radius: 98px; background-color: rgba(22, 37, 79, 0.6) !important; color: #ECECEC;">
+                <div class="card-body p-4">
+                    <h2 class="card-title text-center mb-4">
+                        Login to Your Account
+                    </h2>
+                
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                    
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                    
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                Login
+                            </button>
+                        </div>
+                    
+                        <div class="text-center mt-3">
+                            <p class="mb-0">Don't have an account? 
+                                <a href="{{ url_for('register') }}" class="text-decoration-none">Register here</a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
