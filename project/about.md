@@ -66,8 +66,7 @@ static/
 - Link to registration for new users
 - Consistent styling with registration page
 
-### 5. **User Dashboard** (`dashboard.html`)
-![Dashboard Page] (in progress)
+### 5. **User Dashboard** (`dashboard.html`) (in progress)
 **Covered Requirements:**
 - Profile management with banner and avatar
 - Social media link management
