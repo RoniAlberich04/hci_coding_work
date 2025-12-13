@@ -65,8 +65,8 @@
     }
     
     .profile-picture {
-        width: 500px;
-        height: 500px;
+        width: 250px;
+        height: 250px;
         border-radius: 50%;
         border: 5px solid rgba(255, 255, 255, 0.3);
         object-fit: cover;
@@ -102,6 +102,22 @@
         color: white;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
+
+    .profile_table {
+        background-color: rgba(22, 37, 79, 0.6) !important; 
+        color: #ECECEC; 
+        border-radius: 20px;
+        width: 100%;}
+
+    .profile_table tr, .profile_table tbody{
+        width: 100%;
+    }
+
+    .profile_table td {
+        padding: 10px 15px; 
+        width: 50%;
+    }
+
 </style>
 
 
@@ -111,7 +127,6 @@
     
     <!-- Banner content -->
     <div class="banner-text">
-        <h2>{{ user.display_name }}</h2>
         <p class="lead mb-0">@{{ user.username }}</p>
     </div>
     
@@ -131,7 +146,7 @@
                 alt="Profile Picture" 
                 class="profile-picture mb-3">
             {% else %}
-            <img src="{{ url_for('static', filename='images/3c67757cef723535a7484a6c7bfbfc43.jpeg') }}" 
+            <img src="{{ url_for('static', filename='images/3c67757cef723535a7484a6c7bfbfc43.jpg') }}" 
                 alt="Profile Picture" 
                 class="profile-picture mb-3">
             {% endif %}
@@ -177,13 +192,19 @@
                                 <i class="bi bi-youtube"></i> YouTube
                             {% elif link.platform == 'instagram' %}
                                 <i class="bi bi-instagram"></i> Instagram
+                            {% elif link.platform == 'tiktok' %}
+                                <i class="bi bi-tiktok"></i> TikTok
+                            {% elif link.platform == 'telegram' %}
+                                <i class="bi bi-telegram"></i> Telegram
+                            {% elif link.platform == 'twitch' %}
+                                <i class="bi bi-twitch"></i> Twitch
                             {% else %}
                                 <i class="bi bi-link-45deg"></i> {{ link.platform }}
                             {% endif %}
                         </a>
                         {% endfor %}
                     {% else %}
-                        <p class="text-muted"  style="color: #ECECEC;">No social links yet</p>
+                        <p class="text"  style="color: #ECECEC;">No social links yet</p>
                     {% endif %}
                 </div>
                 
@@ -197,6 +218,7 @@
                             <option value="youtube">YouTube</option>
                             <option value="tiktok">TikTok</option>
                             <option value="telegram">Telegram</option>
+                            <option value="twitch">Twitch</option>
                             <option value="other">Other</option>  
                         </select>
                         <input type="url" class="form-control" name="url" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC;"
@@ -212,18 +234,14 @@
     
     
     <div class="col-md-6">
-        <div class="card mb-4" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+        <div class="card mb-4" style="background-color: rgba(22, 37, 79, 0.6) !important; color: #ECECEC; border-radius: 20px;">
             <div class="card-body">
                 <h3 class="card-title">Profile page</h3>
                 
-                <table class="table table-borderless text-light" style="background-color: rgba(22, 37, 79, 0.6); color: #ECECEC; border-radius: 20px;">
+                <table class="profile_table table-borderless text-light">
                     <tr>
                         <td><strong>Username:</strong></td>
                         <td>{{ user.username }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Email:</strong></td>
-                        <td>{{ user.email }}</td>
                     </tr>
                     <tr>
                         <td><strong>First appearence:</strong></td>
@@ -300,7 +318,7 @@
                         <small>
                             <i class="bi bi-info-circle"></i> 
                             You can upload photos to any image hosting service 
-                            (Imgur, Google Фото и т.д.) и and paste the link here.
+                            (Imgur, Google Photo, etc.) and paste the link here.
                         </small>
                     </div>
                     
